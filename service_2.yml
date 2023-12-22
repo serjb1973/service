@@ -1,0 +1,25 @@
+---
+- hosts: service
+  become: true
+
+  tasks:
+  - name: update yum
+    yum: update_cache=yes
+
+  - name: install epel-release
+    yum: name=epel-release state=latest
+  
+  - name: install spawn-fcgi
+    yum: name=spawn-fcgi state=latest
+
+  - name: install php
+    yum: name=php state=latest
+  
+  - name: install php-cli
+    yum: name=php-cli state=latest
+  
+  - name: install mod_fcgid
+    yum: name=mod_fcgid state=latest
+  
+  - name: install httpd
+    yum: name=httpd state=latest

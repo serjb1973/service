@@ -1,0 +1,56 @@
+---
+- hosts: service
+  become: true
+
+  tasks:
+  - name: edit cfg spawn-fcgi
+    replace:
+      path: /etc/sysconfig/spawn-fcgi
+      regexp: '(^#)([A-Z].*?$)'
+      replace: '\2'
+
+  - name: Copy file service spawn-fcgi
+    copy:
+      src: ./files/spawn-fcgi.service
+      dest: /etc/systemd/system/spawn-fcgi.service
+
+  - name: Start service spawn-fcgi
+    systemd:
+      name: spawn-fcgi.service
+      state: started
+
+  - name: Copy file service httpd
+    copy:
+      src: ./files/httpd.service
+      dest: /usr/lib/systemd/system/httpd@.service
+
+  - name: Copy file httpd-first
+    copy:
+      src: ./files/httpd-first
+      dest: /etc/sysconfig/httpd-first
+
+  - name: Copy file httpd-second
+    copy:
+      src: ./files/httpd-second
+      dest: /etc/sysconfig/httpd-second
+
+  - name: Copy file first.conf
+    copy:
+      src: ./files/first.conf
+      dest: /etc/httpd/conf/first.conf
+
+  - name: Copy file second.conf
+    copy:
+      src: ./files/second.conf
+      dest: /etc/httpd/conf/second.conf
+
+  - name: Start service httpd@first
+    systemd:
+      name: httpd@first
+      state: started
+
+  - name: Start service httpd@second
+    systemd:
+      name: httpd@second
+      state: started
+
